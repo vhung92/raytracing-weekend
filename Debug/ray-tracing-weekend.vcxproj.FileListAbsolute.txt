@@ -1,1 +1,2 @@
 C:\Users\Victor\Documents\GitHub\ray-tracing-weekend\Debug\ray-tracing-weekend.exe
+C:\Users\Victor\Documents\GitHub\ray-tracing-weekend\raytracing-weekend\Debug\ray-tracing-weekend.exe
