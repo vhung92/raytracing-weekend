@@ -13,7 +13,7 @@ pub fn new(center: Vec3, radius: f64) -> Sphere {
 }
 
 impl Hitable for Sphere {
-    fn hit(&self, r: Ray, t_min: f64, t_max: f64, hit_rec: &mut HitRecord) -> bool {
+    fn hit(&self, r: Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = r.origin() - self.center;
         let a = dot(r.direction(), r.direction());
         let b = dot(oc, r.direction());
@@ -22,19 +22,25 @@ impl Hitable for Sphere {
         if discriminant > 0.0 {
             let mut temp = (-b - f64::sqrt(b*b-a*c)) / a;
             if temp < t_max && temp > t_min {
-                hit_rec.t = temp;
-                hit_rec.p = r.point_at_parameter(hit_rec.t);
-                hit_rec.normal = (hit_rec.p - self.center) / self.radius;
-                return true;
+                let p = r.point_at_parameter(temp);
+                let hit_rec = HitRecord {
+                    t: temp,
+                    p,
+                    normal: (p - self.center) / self.radius,
+                };
+                return Some(hit_rec);
             }
             temp = (-b + f64::sqrt(b*b-a*c)) / a;
             if temp < t_max && temp > t_min {
-                hit_rec.t = temp;
-                hit_rec.p = r.point_at_parameter(hit_rec.t);
-                hit_rec.normal = (hit_rec.p - self.center) / self.radius;
-                return true;
+                let p = r.point_at_parameter(temp);
+                let hit_rec = HitRecord {
+                    t: temp,
+                    p,
+                    normal: (p - self.center) / self.radius,
+                };
+                return Some(hit_rec);
             }
         }
-        false
+        None
     }
 }

@@ -10,15 +10,21 @@ pub fn new(l: Vec<Box<dyn Hitable>>) -> HitableList {
 }
 
 impl Hitable for HitableList {
-    fn hit(&self, r: Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
-        let mut hit_anything = false;
+    fn hit(&self, r: Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+        let mut record: HitRecord;
+        let mut result = None;
         let mut closest_so_far = t_max;
+        let hit_anything = false;
         for obj in self.list.iter() {
-            if obj.hit(r, t_min, closest_so_far, rec) {
-                hit_anything = true;
-                closest_so_far = rec.t;
+            match obj.hit(r, t_min, closest_so_far) {
+                Some(hit_rec) => {
+                    record = hit_rec;
+                    closest_so_far = record.t;
+                    result = Some(record);
+                }
+                None => continue
             }
         }
-        hit_anything
+        result
     }
 }

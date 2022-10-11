@@ -24,13 +24,15 @@ fn hit_sphere(center: Vec3, radius: f64, r: Ray) -> f64 {
 }
 
 fn color (r: Ray, world: &Box<dyn Hitable>) -> Vec3 {
-    let mut rec = hitable::HitRecord{ t: 0.0, p: vec3::one(), normal: vec3::one() };
-    if world.hit(r, 0.0, f64::MAX, &mut rec) {
-        return vec3::new(rec.normal.x() + 1.0, rec.normal.y() + 1.0, rec.normal.z() + 1.0) * 0.5;
-    } else {
-        let unit_direction = vec3::unit_vec(r.direction());
-        let t = 0.5*(unit_direction.y() + 1.0);
-        (1.0-t) * vec3::one() + t*vec3::new(0.5, 0.7, 1.0)
+    return match world.hit(r, 0.0, f64::MAX) {
+        Some(rec) => {
+            vec3::new(rec.normal.x() + 1.0, rec.normal.y() + 1.0, rec.normal.z() + 1.0) * 0.5
+        }
+        _ => {
+            let unit_direction = vec3::unit_vec(r.direction());
+            let t = 0.5 * (unit_direction.y() + 1.0);
+            (1.0 - t) * vec3::one() + t * vec3::new(0.5, 0.7, 1.0)
+        }
     }
 }
 
