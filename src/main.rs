@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use rand::random;
 use crate::hitable::{Hitable};
 use crate::vec3::Vec3;
@@ -11,28 +12,8 @@ mod hitable;
 mod sphere;
 mod hitable_list;
 mod camera;
-
-fn random_in_unit_sphere() -> vec3::Vec3 {
-    let mut p = vec3::one();
-    while p.squared_length() >= 1.0 {
-        p = 2.0* vec3::new(random::<f64>(), random::<f64>(), random::<f64>()) - vec3::new(1.0,1.0, 1.0);
-    }
-    p
-}
-
-fn color (r: Ray, world: &Box<dyn Hitable>) -> Vec3 {
-    return match world.hit(r, 0.001, f64::MAX) {
-        Some(rec) => {
-            let target = rec.p + rec.normal + random_in_unit_sphere();
-            0.5 * color(ray::new(rec.p, target-rec.p), world)
-        }
-        _ => {
-            let unit_direction = vec3::unit_vec(r.direction());
-            let t = 0.5 * (unit_direction.y() + 1.0);
-            (1.0 - t) * vec3::one() + t * vec3::new(0.5, 0.7, 1.0)
-        }
-    }
-}
+mod materials;
+mod utils;
 
 fn main() {
     env_logger::init();
@@ -43,8 +24,10 @@ fn main() {
     let mut imgbuf = image::ImageBuffer::new(nx, ny);
 
     let mut list: Vec<Box<dyn Hitable>> = Vec::new();
-    list.push(Box::new(sphere::new(vec3::new(0.0,0.0,-1.0), 0.5)));
-    list.push(Box::new(sphere::new(vec3::new(0.0,-100.5,-1.0), 100.0)));
+    list.push(Box::new(sphere::new(vec3::new(0.0,0.0,-1.0), 0.5, Arc::new(materials::new_lambertian(vec3::new(0.8, 0.3, 0.3))))));
+    list.push(Box::new(sphere::new(vec3::new(0.0,-100.5,-1.0), 100.0, Arc::new(materials::new_lambertian(vec3::new(0.8, 0.8, 0.0))))));
+    list.push(Box::new(sphere::new(vec3::new(1.0,0.0,-1.0), 0.5, Arc::new(materials::new_metal(vec3::new(0.8, 0.6, 0.2))))));
+    list.push(Box::new(sphere::new(vec3::new(-1.0,0.0,-1.0), 0.5, Arc::new(materials::new_metal(vec3::new(0.8, 0.8, 0.8))))));
 
     let world: Box<dyn Hitable> = Box::new(hitable_list::new(list));
     let cam = camera::new();
@@ -55,7 +38,7 @@ fn main() {
             let v = ((ny-y) as f64 + random::<f64>())  / ny as f64;
             let ray = cam.get_ray(u, v);
             // let p = ray.point_at_parameter(2.0);
-            col += color(ray, &world);
+            col += utils::color(ray, &world, 0);
         }
         col /= ns as f64;
         let ir = (f64::sqrt(col.r()) * 255.99) as u8;

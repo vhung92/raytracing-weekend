@@ -1,11 +1,13 @@
+use std::sync::Arc;
+use crate::materials;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-#[derive(Debug, Copy, Clone)]
 pub struct HitRecord {
     pub(crate) t: f64,
     pub(crate) p: Vec3,
-    pub(crate) normal: Vec3
+    pub(crate) normal: Vec3,
+    pub(crate) material: Arc<dyn materials::Material>,
 }
 
 pub trait Hitable {
