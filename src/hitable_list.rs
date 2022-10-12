@@ -14,7 +14,6 @@ impl Hitable for HitableList {
         let mut record: HitRecord;
         let mut result = None;
         let mut closest_so_far = t_max;
-        let hit_anything = false;
         for obj in self.list.iter() {
             match obj.hit(r, t_min, closest_so_far) {
                 Some(hit_rec) => {

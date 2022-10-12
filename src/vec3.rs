@@ -90,7 +90,7 @@ impl ops::SubAssign for Vec3 {
     }
 }
 
-impl ops::Div for Vec3 {
+impl ops::Div<Vec3> for Vec3 {
     type Output = Vec3;
 
     fn div(mut self, rhs: Self) -> Self::Output {
@@ -108,9 +108,15 @@ impl ops::Div<f64> for Vec3 {
     }
 }
 
-impl ops::DivAssign for Vec3 {
+impl ops::DivAssign<Vec3> for Vec3 {
     fn div_assign(&mut self, rhs: Self) {
         *self = Self { e: [self.e[0] / rhs.e[0], self.e[1] / rhs.e[1], self.e[2] / rhs.e[2]] };
+    }
+}
+
+impl ops::DivAssign<f64> for Vec3 {
+    fn div_assign(&mut self, t: f64) {
+        *self = Self { e: [self.e[0] / t, self.e[1] / t, self.e[2] / t] };
     }
 }
 
