@@ -1,7 +1,9 @@
 use crate::hitable::Hitable;
 use rand::random;
+use std::fmt::{format, Debug};
 use std::sync::Arc;
-use std::time::Instant;
+use std::time;
+use std::time::{Duration, Instant, SystemTimeError};
 
 #[macro_use]
 extern crate log;
@@ -16,7 +18,7 @@ mod utils;
 mod vec3;
 
 fn main() {
-    let startTime = Instant::now();
+    let start_time = Instant::now();
     env_logger::init();
     let nx = 800;
     let ny = 400;
@@ -28,7 +30,7 @@ fn main() {
         Box::new(sphere::new(
             vec3::new(0.0, 0.0, -1.0),
             0.5,
-            Arc::new(materials::new_lambertian(vec3::new(0.8, 0.3, 0.3))),
+            Arc::new(materials::new_lambertian(vec3::new(0.1, 0.2, 0.5))),
         )),
         Box::new(sphere::new(
             vec3::new(0.0, -100.5, -1.0),
@@ -38,18 +40,35 @@ fn main() {
         Box::new(sphere::new(
             vec3::new(1.0, 0.0, -1.0),
             0.5,
-            Arc::new(materials::new_metal(vec3::new(0.8, 0.6, 0.2))),
+            Arc::new(materials::new_metal(vec3::new(0.8, 0.6, 0.2), 0.4)),
         )),
         Box::new(sphere::new(
             vec3::new(-1.0, 0.0, -1.0),
             0.5,
-            Arc::new(materials::new_metal(vec3::new(0.8, 0.8, 0.8))),
+            Arc::new(materials::new_dielectric(1.5)),
         )),
+        Box::new(sphere::new(
+            vec3::new(-1.0, 0.0, -1.0),
+            -0.45,
+            Arc::new(materials::new_dielectric(1.5)),
+        )), // Box::new(sphere::new(
+            //     vec3::new(-1.0, 0.0, -1.0),
+            //     0.5,
+            //     Arc::new(materials::new_metal(vec3::new(0.8, 0.8, 0.8), 1.0)),
+            // )),
     ];
 
     let world: Box<dyn Hitable> = Box::new(hitable_list::new(list));
     let cam = camera::new();
-    info!("Generating image...");
+
+    let image_name = format!(
+        "raytracer_{}.png",
+        time::SystemTime::now()
+            .duration_since(time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+    );
+    info!("Generating image `{}` ...", image_name);
     for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
         let mut col = vec3::new(0.0, 0.0, 0.0);
         for _ in 0..ns {
@@ -68,7 +87,8 @@ fn main() {
     }
     info!(
         "Done generating image in {} seconds",
-        startTime.elapsed().as_secs()
+        start_time.elapsed().as_secs()
     );
-    imgbuf.save("blah.png").unwrap();
+
+    imgbuf.save(image_name).unwrap();
 }
