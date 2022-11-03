@@ -25,7 +25,6 @@ fn main() {
     let ns = 100;
     // Create a new ImgBuf with width: imgx and height: imgy
     let mut imgbuf = image::ImageBuffer::new(nx, ny);
-
     let list: Vec<Box<dyn Hitable>> = vec![
         Box::new(sphere::new(
             vec3::new(0.0, 0.0, -1.0),
@@ -58,8 +57,25 @@ fn main() {
             // )),
     ];
 
+    // let radius = f64::cos(std::f64::consts::PI / 4.0);
+    // let list2: Vec<Box<dyn Hitable>> = vec![
+    //     Box::new(sphere::new(
+    //         vec3::new(-radius, 0.0, -1.0),
+    //         radius,
+    //         Arc::new(materials::new_lambertian(vec3::new(0.0, 0.0, 1.0))),
+    //     )),
+    //     Box::new(sphere::new(
+    //         vec3::new(radius, 0.0, -1.0),
+    //         radius,
+    //         Arc::new(materials::new_lambertian(vec3::new(1.0, 0.0, 0.0))),
+    //     )),
+    // ];
+
     let world: Box<dyn Hitable> = Box::new(hitable_list::new(list));
-    let cam = camera::new();
+    let look_from = vec3::new(-2.0, 2.0, 1.0);
+    let look_at = vec3::new(0.0, 0.0, -1.0);
+    let vup = vec3::new(0.0, 1.0, 0.0);
+    let cam = camera::new(look_at, look_from, vup, 90.0, nx as f64 / ny as f64);
 
     let image_name = format!(
         "raytracer_{}.png",
