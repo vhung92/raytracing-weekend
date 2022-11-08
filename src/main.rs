@@ -3,7 +3,6 @@ use rand::random;
 use std::fmt::{format, Debug};
 use std::sync::Arc;
 use std::time;
-use std::time::{Duration, Instant, SystemTimeError};
 
 #[macro_use]
 extern crate log;
@@ -18,7 +17,7 @@ mod utils;
 mod vec3;
 
 fn main() {
-    let start_time = Instant::now();
+    let start_time = time::Instant::now();
     env_logger::init();
     let nx = 800;
     let ny = 400;
@@ -75,7 +74,7 @@ fn main() {
     let look_from = vec3::new(-2.0, 2.0, 1.0);
     let look_at = vec3::new(0.0, 0.0, -1.0);
     let vup = vec3::new(0.0, 1.0, 0.0);
-    let cam = camera::new(look_at, look_from, vup, 90.0, nx as f64 / ny as f64);
+    let cam = camera::new(look_from, look_at, vup, 90.0, nx as f64 / ny as f64);
 
     let image_name = format!(
         "raytracer_{}.png",
