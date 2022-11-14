@@ -48,32 +48,16 @@ fn main() {
             vec3::new(-1.0, 0.0, -1.0),
             -0.45,
             Arc::new(materials::new_dielectric(1.5)),
-        )), // Box::new(sphere::new(
-            //     vec3::new(-1.0, 0.0, -1.0),
-            //     0.5,
-            //     Arc::new(materials::new_metal(vec3::new(0.8, 0.8, 0.8), 1.0)),
-            // )),
+        )),
     ];
 
-    // let radius = f64::cos(std::f64::consts::PI / 4.0);
-    // let list2: Vec<Box<dyn Hitable>> = vec![
-    //     Box::new(sphere::new(
-    //         vec3::new(-radius, 0.0, -1.0),
-    //         radius,
-    //         Arc::new(materials::new_lambertian(vec3::new(0.0, 0.0, 1.0))),
-    //     )),
-    //     Box::new(sphere::new(
-    //         vec3::new(radius, 0.0, -1.0),
-    //         radius,
-    //         Arc::new(materials::new_lambertian(vec3::new(1.0, 0.0, 0.0))),
-    //     )),
-    // ];
-
     let world: Box<dyn Hitable> = Box::new(hitable_list::new(list));
-    let look_from = vec3::new(-2.0, 2.0, 1.0);
+    let look_from = vec3::new(3.0, 3.0, 2.0);
     let look_at = vec3::new(0.0, 0.0, -1.0);
     let vup = vec3::new(0.0, 1.0, 0.0);
-    let cam = camera::new(look_from, look_at, vup, 20.0, nx as f64 / ny as f64);
+    let dist_to_focus = (look_from-look_at).length();
+    let aperture = 2.0;
+    let cam = camera::new(look_from, look_at, vup, 90.0, nx as f64 / ny as f64, aperture, dist_to_focus);
 
     let image_name = format!(
         "raytracer_{}.png",
