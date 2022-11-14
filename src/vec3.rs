@@ -32,6 +32,7 @@ pub fn one() -> Vec3 {
     Vec3 { e: [1.0, 1.0, 1.0] }
 }
 
+#[allow(dead_code)]
 pub fn zero() -> Vec3 { Vec3 { e: [0.0, 0.0, 0.0] } }
 
 #[allow(dead_code)]

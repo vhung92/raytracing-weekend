@@ -66,7 +66,7 @@ impl Material for Dielectric {
         let mut ni_over_nt = 1.0 / self.ref_idx;
         let attn = vec3::one();
         let mut cosine = -vec3::dot(r_in.direction(), rec.normal) / r_in.direction().length();
-        let mut reflect_prob = 1.0;
+        // let mut reflect_prob = 1.0;
         if vec3::dot(r_in.direction(), rec.normal) > 0.0 {
             outward_normal = -1.0 * outward_normal;
             ni_over_nt = self.ref_idx;
@@ -76,7 +76,7 @@ impl Material for Dielectric {
         let mut scattered = ray::new(rec.p, reflected);
 
         if let Some(refracted) = utils::refract(r_in.direction(), outward_normal, ni_over_nt) {
-            reflect_prob = utils::schlick_approximation(cosine, self.ref_idx);
+            let reflect_prob = utils::schlick_approximation(cosine, self.ref_idx);
             if random::<f64>() < reflect_prob {
                 return Some((attn, scattered));
             }
