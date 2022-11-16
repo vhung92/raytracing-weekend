@@ -1,6 +1,7 @@
 use std::fmt;
 use std::fmt::Formatter;
 use std::ops;
+use rand::{random, Rng, thread_rng};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Vec3 {
@@ -32,8 +33,13 @@ pub fn one() -> Vec3 {
     Vec3 { e: [1.0, 1.0, 1.0] }
 }
 
-#[allow(dead_code)]
-pub fn zero() -> Vec3 { Vec3 { e: [0.0, 0.0, 0.0] } }
+pub fn random_vec() -> Vec3 {
+    Vec3 { e: [random::<f64>(), random::<f64>(), random::<f64>()] }
+}
+
+pub fn random_vec_bounded(min: f64, max: f64) -> Vec3 {
+    Vec3 { e: [thread_rng().gen_range(min..max), thread_rng().gen_range(min..max), thread_rng().gen_range(min..max)] }
+}
 
 #[allow(dead_code)]
 impl Vec3 {
