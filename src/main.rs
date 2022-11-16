@@ -21,9 +21,9 @@ fn main() {
     let start_time = time::Instant::now();
     env_logger::init();
     let aspect_ratio = 3.0 / 2.0;
-    let image_width = 1200;
+    let image_width = 800;
     let image_height = (image_width as f64 / aspect_ratio) as u32;
-    let samples_per_pixel = 500;
+    let samples_per_pixel = 50;
     // Create a new ImgBuf with width: imgx and height: imgy
     let mut imgbuf = image::ImageBuffer::new(image_width, image_height);
     // let list: Vec<Box<dyn Hitable>> = vec![
@@ -76,7 +76,6 @@ fn main() {
             let u = (x as f64 + random::<f64>()) / image_width as f64;
             let v = ((image_height - y) as f64 + random::<f64>()) / image_height as f64;
             let ray = cam.get_ray(u, v);
-            // let p = ray.point_at_parameter(2.0);
             col += utils::color(ray, &world, 0);
         }
         col /= samples_per_pixel as f64;
@@ -100,8 +99,8 @@ fn random_scene() -> Box<dyn Hitable> {
     let ground_material = materials::new_lambertian(vec3::new(0.5, 0.5, 0.5));
 
     list.push(Box::new(sphere::new(
-        vec3::new(-1.0, 0.0, -1.0),
-        -0.45,
+        vec3::new(0.0, -1000.0, 0.0),
+        1000.0,
         Arc::new(ground_material),
     )));
 
