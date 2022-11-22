@@ -26,33 +26,6 @@ fn main() {
     let samples_per_pixel = 50;
     // Create a new ImgBuf with width: imgx and height: imgy
     let mut imgbuf = image::ImageBuffer::new(image_width, image_height);
-    // let list: Vec<Box<dyn Hitable>> = vec![
-    //     Box::new(sphere::new(
-    //         vec3::new(0.0, 0.0, -1.0),
-    //         0.5,
-    //         Arc::new(materials::new_lambertian(vec3::new(0.1, 0.2, 0.5))),
-    //     )),
-    //     Box::new(sphere::new(
-    //         vec3::new(0.0, -100.5, -1.0),
-    //         100.0,
-    //         Arc::new(materials::new_lambertian(vec3::new(0.8, 0.8, 0.0))),
-    //     )),
-    //     Box::new(sphere::new(
-    //         vec3::new(1.0, 0.0, -1.0),
-    //         0.5,
-    //         Arc::new(materials::new_metal(vec3::new(0.8, 0.6, 0.2), 0.4)),
-    //     )),
-    //     Box::new(sphere::new(
-    //         vec3::new(-1.0, 0.0, -1.0),
-    //         0.5,
-    //         Arc::new(materials::new_dielectric(1.5)),
-    //     )),
-    //     Box::new(sphere::new(
-    //         vec3::new(-1.0, 0.0, -1.0),
-    //         -0.45,
-    //         Arc::new(materials::new_dielectric(1.5)),
-    //     )),
-    // ];
 
     let world = random_scene();
     let look_from = vec3::new(13.0, 2.0, 3.0);
